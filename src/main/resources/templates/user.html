@@ -1,11 +1,123 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Spring Security Example</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Information</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        p {
+            margin: 0;
+        }
+
+        hr {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            border: 0;
+        }
+
+        .table {
+            margin: 0;
+        }
+
+        .table-m {
+            margin: 0 20px 40px 20px;
+        }
+
+        .vh {
+            height: 100vh;
+            padding-top: 23px;
+        }
+
+        .pt-15 {
+            padding-top: 15px;
+        }
+
+        .fw-extra-bold {
+            font-weight: 900;
+        }
+
+        .navbar-head {
+            padding: 9px 0 11px 0;
+        }
+    </style>
 </head>
 <body>
-<h1>User, welcome spring boot security page!</h1>
+<header>
+    <nav class="navbar navbar-dark bg-dark p-0 shadow">
+        <div class="navbar-brand navbar-head nav-item text-left text-white px-3">
+            <span class="fw-extra-bold" th:text="${user.username}"></span>
+            <span>with roles:</span>
+            <span th:each="role : ${user.roles}"
+                  th:text="${#strings.substring(role.name, 5)} + ' '"></span>
+        </div>
+        <ul class="navbar-nav mr-3">
+            <li class="nav-item text-nowrap">
+                <a class="nav-link px-3" href="/logout">Logout</a>
+            </li>
+        </ul>
+    </nav>
+</header>
 
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 px-0 pt-15">
+            <div class="d-flex flex-column flex-shrink-0 p-0 text-white">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item">
+                        <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+                           href="/admin" class="nav-link no-refresh">Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a data-bs-toggle="pill" class="nav-link active no-refresh" role="tab"
+                           aria-current="false">User</a>
+                    </li>
 
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-10 bg-light vh">
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="userInfo" role="tabpanel">
+                    <div class="container-fluid">
+                        <h2>User information-page</h2>
+                        <div class="card">
+                            <div class="container-fluid px-0 bg-light border">
+                                <h5 class="card-header">
+                                    About user</h5>
+                            </div>
+                            <div class="table-m">
+                                <table class="table table-striped">
+                                    <hr>
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Username</th>
+                                        <th>Surname</th>
+                                        <th>Age</th>
+                                        <th>Role</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="user : ${user}">
+                                        <td><p th:text="${user.getId()}"></p></td>
+                                        <td><p th:text="${user.username}"></p></td>
+                                        <td><p th:text="${user.surname}"></p></td>
+                                        <td><p th:text="${user.age}"></p></td>
+                                        <td>
+                                    <span th:each="role : ${user.roles}"
+                                          th:text="${#strings.substring(role.name, 5)} + ' '"></span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
